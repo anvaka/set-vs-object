@@ -1,0 +1,15 @@
+{
+  "name": "set-vs-object",
+  "version": "1.0.0",
+  "description": "Comparing performance of Set vs Object for counting objects",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrei Kashcha",
+  "license": "MIT",
+  "dependencies": {
+    "benchmark": "^1.0.0",
+    "ngraph.random": "0.0.1"
+  }
+}
