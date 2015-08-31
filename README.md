@@ -1,7 +1,6 @@
-# Benchmark: Fastest way to count unique objects
+# Benchmark: Faster way to count unique objects
 
-Counting unique elements is a common task in many programs.
-
+Counting unique elements is a common task in many programs. 
 Until recently the most straightforward way to do so was something along
 these lines:
 
