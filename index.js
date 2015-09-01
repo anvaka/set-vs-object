@@ -1,7 +1,9 @@
 var Benchmark = require('benchmark');
 var randomAPI = require('ngraph.random');
 var suite = new Benchmark.Suite;
-var topPairJaccardIndex, topPairJaccardValue, topPairObjectIndex, topPairObjectValue;
+var topPairJaccardIndex, topPairJaccardValue,
+    topPairObjectIndex, topPairObjectValue,
+    topPairObject1Index, topPairObject1Value;
 var charSet = 'abcdefghijklmnopqrstuvwxyz';
 
 suite.add('Compute jaccard similarity with Set', function() {
@@ -22,7 +24,7 @@ suite.add('Compute jaccard similarity with Set', function() {
       topPairJaccardValue = max = similarity;
     }
   }
-}).add('Compute jaccard similarity with objects', function() {
+}).add('Compute jaccard similarity with objects (Object.keys())', function() {
   // Both methods should yield the same results, since we are using the
   // same seed for the random number generator:
   var seed = 42;
@@ -45,6 +47,33 @@ suite.add('Compute jaccard similarity with Set', function() {
       topPairObjectValue = max = similarity;
     }
   }
+}).add('Compute jaccard similarity with objects (for in)', function() {
+  // Both methods should yield the same results, since we are using the
+  // same seed for the random number generator:
+  var seed = 42;
+  var rnd = randomAPI.random(seed);
+  var max = 0;
+  for (var i = 0; i < 10; ++i) {
+    var setA = generateSetObjects(100, rnd);
+    var setB = generateSetObjects(100, rnd);
+    var intersect = 0;
+    var setASize = 0;
+    for (var key in setA) {
+      if (setB[key]) intersect += 1;
+      setASize += 1;
+    }
+
+    var setBSize = 0;
+    for (var keyB in setB) {
+      setBSize += 1;
+    }
+    var similarity = intersect/(setASize + setBSize - intersect);
+
+    if (similarity > max) {
+      topPairObject1Index = i;
+      topPairObject1Value = max = similarity;
+    }
+  }
 })
 .on('cycle', function(event) {
   console.log(String(event.target));
@@ -52,7 +81,8 @@ suite.add('Compute jaccard similarity with Set', function() {
 .on('complete', function() {
   console.log('Fastest is ' + this.filter('fastest').pluck('name'));
   console.log('(Set) Jaccard top pair at: ' + topPairJaccardIndex + ' (' + topPairJaccardValue + ')');
-  console.log('(Obj) Jaccard top pair at: ' + topPairObjectIndex + ' (' + topPairObjectValue + ')');
+  console.log('(Obj.keys) Jaccard top pair at: ' + topPairObjectIndex + ' (' + topPairObjectValue + ')');
+  console.log('(Obj.for in) Jaccard top pair at: ' + topPairObject1Index + ' (' + topPairObject1Value + ')');
 })
 .run({ 'async': true });
 
