@@ -18,8 +18,9 @@ var unique = getUniqueElements(['cat', 'dog', 'cat']);
 // unique is: ['cat', 'dog']
 ```
 
-*SIDE NOTE*: This program has a subtle bug. [Open issue](https://github.com/anvaka/set-vs-object/issues/new)
-if you found it and I'll give you credit.
+*SIDE NOTE*: This program has a subtle bug. ~~Open issue if you found it and
+I'll give you credit.~~ Kudos to @lukaszsamson, @erykpiast, @elclanrs, @Slayer95
+and @bchelli for [bringing answers](https://github.com/anvaka/set-vs-object/issues)!
 
 With introduction of [Set object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set)
 things have changed. The program can be rewritten as:
