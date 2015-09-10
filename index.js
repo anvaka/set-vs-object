@@ -1,10 +1,12 @@
 var Benchmark = require('benchmark');
 var randomAPI = require('ngraph.random');
+
+var getRandomKey = require('./lib/getRandomKey.js');
+
 var suite = new Benchmark.Suite;
 var topPairJaccardIndex, topPairJaccardValue,
     topPairObjectIndex, topPairObjectValue,
     topPairObject1Index, topPairObject1Value;
-var charSet = 'abcdefghijklmnopqrstuvwxyz';
 
 suite.add('Compute jaccard similarity with Set', function() {
   var seed = 42;
@@ -104,10 +106,3 @@ function generateSetObjects(count, rnd) {
   return set;
 }
 
-function getRandomKey(length, rnd) {
-  var result = '';
-  for (var i = 0; i < length; ++i) {
-    result += charSet[rnd.next(charSet.length)]
-  }
-  return result;
-}

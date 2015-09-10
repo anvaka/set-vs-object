@@ -97,6 +97,13 @@ Compute jaccard similarity with objects x 689 ops/sec ±1.43% (88 runs sampled)
 Set objects are almost two times faster than our old plain Object. The tests
 were executed using v8 engine `3.28.71.19`.
 
+## Memory consideration
+
+I compared RAM consumption by building 10,000,000 string keys and stored them
+both as object keys and as set elements. There was no significant difference
+between two approaches: Set used ~913MB, while Object was ~942MB. You can
+find code in [testMemory.sh](https://github.com/anvaka/set-vs-object/blob/master/testMemory.sh)
+
 # Conclusion
 
 Sets are awesome and we should use them more often. They are fast, and supported
