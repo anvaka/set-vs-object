@@ -5,6 +5,7 @@ var getRandomKey = require('./lib/getRandomKey.js');
 
 var suite = new Benchmark.Suite;
 var topPairJaccardIndex, topPairJaccardValue,
+    topPairJaccardMapIndex, topPairJaccardMapValue,
     topPairObjectIndex, topPairObjectValue,
     topPairObject1Index, topPairObject1Value;
 
@@ -24,6 +25,25 @@ suite.add('Compute jaccard similarity with Set', function() {
     if (similarity > max) {
       topPairJaccardIndex = i;
       topPairJaccardValue = max = similarity;
+    }
+  }
+})
+.add('Compute jaccard similarity with Map', function() {
+  var seed = 42;
+  var rnd = randomAPI.random(seed);
+  var max = 0;
+  for (var i = 0; i < 10; ++i) {
+    var mapA = generateMap(100, rnd);
+    var mapB = generateMap(100, rnd);
+    var intersect = 0;
+    mapA.forEach(function(_, key) {
+      if (mapB.has(key)) intersect += 1;
+    });
+    var similarity = intersect/(mapA.size + mapB.size - intersect);
+
+    if (similarity > max) {
+      topPairJaccardMapIndex = i;
+      topPairJaccardMapValue = max = similarity;
     }
   }
 }).add('Compute jaccard similarity with objects (Object.keys())', function() {
@@ -83,6 +103,7 @@ suite.add('Compute jaccard similarity with Set', function() {
 .on('complete', function() {
   console.log('Fastest is ' + this.filter('fastest').pluck('name'));
   console.log('(Set) Jaccard top pair at: ' + topPairJaccardIndex + ' (' + topPairJaccardValue + ')');
+  console.log('(Map) Jaccard top pair at: ' + topPairJaccardMapIndex + ' (' + topPairJaccardMapValue + ')');
   console.log('(Obj.keys) Jaccard top pair at: ' + topPairObjectIndex + ' (' + topPairObjectValue + ')');
   console.log('(Obj.for in) Jaccard top pair at: ' + topPairObject1Index + ' (' + topPairObject1Value + ')');
 })
@@ -95,6 +116,15 @@ function generateSet(count, rnd) {
     set.add(key);
   }
   return set;
+}
+
+function generateMap(count, rnd) {
+  var map = new Map();
+  for (var i = 0; i < count; ++i) {
+    var key = getRandomKey(3, rnd)
+    map.set(key, 1);
+  }
+  return map;
 }
 
 function generateSetObjects(count, rnd) {
