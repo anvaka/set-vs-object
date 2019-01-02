@@ -1,10 +1,10 @@
 # Benchmark: Faster way to count unique objects
 
-Counting unique elements is a common task in many programs. 
+Counting unique elements is a common task in many programs.
 Until recently the most straightforward way to do so was something along
 these lines:
 
-``` js
+```js
 function getUniqueElements(array) {
   var counter = {};
   for (var i = 0; i < array.length; ++i) {
@@ -14,23 +14,23 @@ function getUniqueElements(array) {
   return Object.keys(counter);
 }
 
-var unique = getUniqueElements(['cat', 'dog', 'cat']);
+var unique = getUniqueElements(["cat", "dog", "cat"]);
 // unique is: ['cat', 'dog']
 ```
 
-*SIDE NOTE*: This program has a subtle bug. ~~Open issue if you found it and
+_SIDE NOTE_: This program has a subtle bug. ~~Open issue if you found it and
 I'll give you credit.~~ Kudos to @lukaszsamson, @erykpiast, @elclanrs, @Slayer95
 and @bchelli for [bringing answers](https://github.com/anvaka/set-vs-object/issues)!
 
 With introduction of [Set object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set)
 things have changed. The program can be rewritten as:
 
-``` js
+```js
 function getUniqueSet(array) {
   return new Set(array);
 }
 
-var uniqueSet = getUniqueSet(['cat', 'dog', 'cat']);
+var uniqueSet = getUniqueSet(["cat", "dog", "cat"]);
 // uniqueSet now has only two elements 'cat' and 'dog'.
 ```
 
@@ -58,28 +58,28 @@ There is one shared element (`cat`), and there are three unique elements.
 
 Now we have to implement this function two times: using `Set` and using `Object`:
 
-``` js
+```js
 function similarityObject(objA, objB) {
-    var aKeys = Object.keys(objA);
-    var intersect = 0;
-    aKeys.forEach(function(key) {
-      if (objB[key]) intersect += 1;
-    });
-    var objBSize = Object.keys(setB).length
-    var objASize = aKeys.length;
-    var similarity = intersect/(objASize + objBSize - intersect);
+  var aKeys = Object.keys(objA);
+  var intersect = 0;
+  aKeys.forEach(function(key) {
+    if (objB[key]) intersect += 1;
+  });
+  var objBSize = Object.keys(setB).length;
+  var objASize = aKeys.length;
+  var similarity = intersect / (objASize + objBSize - intersect);
 
-    return similarity;
+  return similarity;
 }
 
 function similaritySet(setA, setB) {
-    var intersect = 0;
-    setA.forEach(function(key) {
-      if (setB.has(key)) intersect += 1;
-    });
-    var similarity = intersect/(setA.size + setB.size - intersect);
+  var intersect = 0;
+  setA.forEach(function(key) {
+    if (setB.has(key)) intersect += 1;
+  });
+  var similarity = intersect / (setA.size + setB.size - intersect);
 
-    return similarity;
+  return similarity;
 }
 ```
 
@@ -98,6 +98,17 @@ Compute jaccard similarity with objects (for in) x 600 ops/sec ±1.46% (82 runs 
 
 Set objects are almost two times faster than our old plain Object. The tests
 were executed using v8 engine `4.6.85.31`.
+
+_Update from 2019 using node `v10.12` (which comes with v8 version `6.8.275.32-node.35`)_
+
+The results are pretty much the same. Set is still faster than a plain object:
+
+```
+Compute jaccard similarity with Set x 2,016 ops/sec ±1.92% (91 runs sampled)
+Compute jaccard similarity with Map x 1,952 ops/sec ±1.65% (89 runs sampled)
+Compute jaccard similarity with objects (Object.keys()) x 1,160 ops/sec ±1.65% (90 runs sampled)
+Compute jaccard similarity with objects (for in) x 1,114 ops/sec ±1.90% (90 runs sampled)
+```
 
 ## Memory consideration
 
