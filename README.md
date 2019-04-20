@@ -110,6 +110,15 @@ Compute jaccard similarity with objects (Object.keys()) x 1,160 ops/sec ±1.65% 
 Compute jaccard similarity with objects (for in) x 1,114 ops/sec ±1.90% (90 runs sampled)
 ```
 
+_Update from using node v11.14 (v8 version is 7.0.276.38-node.18)_
+
+```
+Compute jaccard similarity with Set x 2,133 ops/sec ±0.98% (93 runs sampled)
+Compute jaccard similarity with Map x 2,104 ops/sec ±1.04% (93 runs sampled)
+Compute jaccard similarity with objects (Object.keys()) x 1,240 ops/sec ±1.36% (91 runs sampled)
+Compute jaccard similarity with objects (for in) x 1,203 ops/sec ±1.36% (91 runs sampled)
+```
+
 ## Memory consideration
 
 I compared RAM consumption by building 10,000,000 string keys and stored them
