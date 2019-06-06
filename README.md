@@ -129,7 +129,7 @@ find code in [testMemory.sh](https://github.com/anvaka/set-vs-object/blob/master
 # Conclusion
 
 Sets are awesome and we should use them more often. They are fast, and supported
-by Chrome, Firefox, Microsoft Edge, and node.js.
+by Chrome, Firefox, Microsoft Edge, and Node.js.
 
 You can explore [index.js](https://github.com/anvaka/set-vs-object/blob/master/index.js)
 file to see the actual benchmark code.
