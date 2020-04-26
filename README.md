@@ -1,5 +1,7 @@
 # Benchmark: Faster way to count unique objects
 
+*TL;DR Sets are 2x faster (at least in this benchmark)*
+
 Counting unique elements is a common task in many programs.
 Until recently the most straightforward way to do so was something along
 these lines:
@@ -36,8 +38,6 @@ var uniqueSet = getUniqueSet(["cat", "dog", "cat"]);
 
 `Set` is [supported by all major browsers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set#Browser_compatibility)
 but is it really faster than plain old `Object`?
-
-TL;DR **Set is two times faster than Object**.
 
 ## Benchmark: Jaccard Similarity
 
