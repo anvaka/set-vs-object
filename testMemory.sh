@@ -1,5 +1,5 @@
 #!/bin/bash
-KEYS_COUNT=10000000
+KEYS_COUNT=1000000
 
 echo "Testing with Set"
 for x in $(seq 1 4); do node ./setMemoryUsage.js $KEYS_COUNT; done

@@ -37,7 +37,7 @@ var uniqueSet = getUniqueSet(["cat", "dog", "cat"]);
 `Set` is [supported by all major browsers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set#Browser_compatibility)
 but is it really faster than plain old `Object`?
 
-TL;DR **Set is almost two times faster than Object**.
+TL;DR **Set is two times faster than Object**.
 
 ## Benchmark: Jaccard Similarity
 
@@ -90,41 +90,45 @@ module is extremely good for this. Here are the results:
 
 ```
 > node index.js
-Compute jaccard similarity with Set x 1,232 ops/sec ±1.45% (87 runs sampled)
-Compute jaccard similarity with Map x 1,193 ops/sec ±1.33% (88 runs sampled)
-Compute jaccard similarity with objects (Object.keys()) x 616 ops/sec ±1.32% (85 runs sampled)
-Compute jaccard similarity with objects (for in) x 600 ops/sec ±1.46% (82 runs sampled)
+Compute jaccard similarity with Set x 3,609 ops/sec ±1.23% (85 runs sampled)
+Compute jaccard similarity with Map x 3,502 ops/sec ±1.65% (87 runs sampled)
+Compute jaccard similarity with objects (Object.keys()) x 1,677 ops/sec ±1.81% (83 runs sampled)
+Compute jaccard similarity with objects (for in) x 1,604 ops/sec ±1.53% (83 runs sampled)
 ```
 
-Set objects are almost two times faster than our old plain Object. The tests
-were executed using v8 engine `4.6.85.31`.
-
-_Update from 2019 using node `v10.12` (which comes with v8 version `6.8.275.32-node.35`)_
-
-The results are pretty much the same. Set is still faster than a plain object:
-
-```
-Compute jaccard similarity with Set x 2,016 ops/sec ±1.92% (91 runs sampled)
-Compute jaccard similarity with Map x 1,952 ops/sec ±1.65% (89 runs sampled)
-Compute jaccard similarity with objects (Object.keys()) x 1,160 ops/sec ±1.65% (90 runs sampled)
-Compute jaccard similarity with objects (for in) x 1,114 ops/sec ±1.90% (90 runs sampled)
-```
-
-_Update from using node v11.14 (v8 version is 7.0.276.38-node.18)_
-
-```
-Compute jaccard similarity with Set x 2,133 ops/sec ±0.98% (93 runs sampled)
-Compute jaccard similarity with Map x 2,104 ops/sec ±1.04% (93 runs sampled)
-Compute jaccard similarity with objects (Object.keys()) x 1,240 ops/sec ±1.36% (91 runs sampled)
-Compute jaccard similarity with objects (for in) x 1,203 ops/sec ±1.36% (91 runs sampled)
-```
+Set objects are two times faster than our old plain Object. The tests
+were executed using node version `12.4.0`
 
 ## Memory consideration
 
-I compared RAM consumption by building 10,000,000 string keys and stored them
-both as object keys and as set elements. There was no significant difference
-between two approaches: Set used ~913MB, while Object was ~942MB. You can
-find code in [testMemory.sh](https://github.com/anvaka/set-vs-object/blob/master/testMemory.sh)
+I compared RAM consumption by building 1,000,000 string keys and stored them
+both as object keys and as set elements. There was huge overhead of memory 
+usage with objects.
+
+Set used ~67MB, while Object used ~126MB:
+
+
+```
+Testing with Set
+Memory usage (bytes): {
+   "rss": 113,303,552,
+   "heapTotal": 89,473,024,
+   "heapUsed":67,126,776,
+   "external":775,983
+}
+
+Testing with Object
+Memory usage (bytes): {
+  "rss": 155,701,248,
+  "heapTotal": 131,948,544,
+  "heapUsed": 126,989,976,
+  "external": 775,983
+}
+```
+
+You can read description of each field here: [process.memoryUsage()](https://nodejs.org/api/process.html#process_process_memoryusage).
+
+Tes code is in [testMemory.sh](https://github.com/anvaka/set-vs-object/blob/master/testMemory.sh)
 
 # Conclusion
 
