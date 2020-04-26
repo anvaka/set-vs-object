@@ -1,6 +1,7 @@
 # Benchmark: Faster way to count unique objects
 
-*TL;DR Sets are 2x faster (at least in this benchmark)*
+*TL;DR Sets are 2x faster in this benchmark. Please be cautious
+and don't generalize this statement to all Set operations.*
 
 Counting unique elements is a common task in many programs.
 Until recently the most straightforward way to do so was something along
