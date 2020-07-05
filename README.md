@@ -139,6 +139,14 @@ by Chrome, Firefox, Microsoft Edge, and Node.js.
 You can explore [index.js](https://github.com/anvaka/set-vs-object/blob/master/index.js)
 file to see the actual benchmark code.
 
+## Other benchmarks
+
+* [Array vs Object](https://github.com/anvaka/array-vs-object) - what is faster:
+store array of vectors, or encode vectors into array?
+* [Iterator vs foreach](https://github.com/anvaka/iterator-vs-foreach) - what is faster:
+use `forEach`, `for`, `for .. of`, `[Symbol.Iterator]()`, or `yield *`?
+
+
 ## Bonus
 
 If you haven't seen it yet, watch this video about performance and benchmarking
