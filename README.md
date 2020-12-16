@@ -91,14 +91,18 @@ module is extremely good for this. Here are the results:
 
 ```
 > node index.js
-Compute jaccard similarity with Set x 3,609 ops/sec ±1.23% (85 runs sampled)
-Compute jaccard similarity with Map x 3,502 ops/sec ±1.65% (87 runs sampled)
-Compute jaccard similarity with objects (Object.keys()) x 1,677 ops/sec ±1.81% (83 runs sampled)
-Compute jaccard similarity with objects (for in) x 1,604 ops/sec ±1.53% (83 runs sampled)
+Compute jaccard similarity with Set x 3,445 ops/sec ±2.39% (84 runs sampled)
+Compute jaccard similarity with Map x 3,479 ops/sec ±0.40% (91 runs sampled)
+Compute jaccard similarity with objects (Object.keys()) x 1,787 ops/sec ±0.97% (86 runs sampled)
+Compute jaccard similarity with objects (for in) x 1,698 ops/sec ±0.75% (91 runs sampled)
+Fastest is Compute jaccard similarity with Map
+(Set) Jaccard top pair at: 2 (0.010101010101010102)
+(Map) Jaccard top pair at: 2 (0.010101010101010102)
+(Obj.keys) Jaccard top pair at: 2 (0.010101010101010102)
 ```
 
 Set objects are two times faster than our old plain Object. The tests
-were executed using node version `12.4.0`
+were executed using node version `14.4.0`
 
 ## Memory consideration
 
