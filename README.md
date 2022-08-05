@@ -1,10 +1,13 @@
 # Benchmark: Faster way to count unique objects
 
-Counting unique elements is a common task in many programs. 
+*TL;DR Sets are 2x faster in this benchmark. Please be cautious
+and don't generalize this statement to all Set operations.*
+
+Counting unique elements is a common task in many programs.
 Until recently the most straightforward way to do so was something along
 these lines:
 
-``` js
+```js
 function getUniqueElements(array) {
   var counter = {};
   for (var i = 0; i < array.length; ++i) {
@@ -14,30 +17,28 @@ function getUniqueElements(array) {
   return Object.keys(counter);
 }
 
-var unique = getUniqueElements(['cat', 'dog', 'cat']);
+var unique = getUniqueElements(["cat", "dog", "cat"]);
 // unique is: ['cat', 'dog']
 ```
 
-*SIDE NOTE*: This program has a subtle bug. ~~Open issue if you found it and
+_SIDE NOTE_: This program has a subtle bug. ~~Open issue if you found it and
 I'll give you credit.~~ Kudos to @lukaszsamson, @erykpiast, @elclanrs, @Slayer95
 and @bchelli for [bringing answers](https://github.com/anvaka/set-vs-object/issues)!
 
 With introduction of [Set object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set)
 things have changed. The program can be rewritten as:
 
-``` js
+```js
 function getUniqueSet(array) {
   return new Set(array);
 }
 
-var uniqueSet = getUniqueSet(['cat', 'dog', 'cat']);
+var uniqueSet = getUniqueSet(["cat", "dog", "cat"]);
 // uniqueSet now has only two elements 'cat' and 'dog'.
 ```
 
 `Set` is [supported by all major browsers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set#Browser_compatibility)
 but is it really faster than plain old `Object`?
-
-TL;DR **Set is almost two times faster than Object**.
 
 ## Benchmark: Jaccard Similarity
 
@@ -58,28 +59,28 @@ There is one shared element (`cat`), and there are three unique elements.
 
 Now we have to implement this function two times: using `Set` and using `Object`:
 
-``` js
+```js
 function similarityObject(objA, objB) {
-    var aKeys = Object.keys(objA);
-    var intersect = 0;
-    aKeys.forEach(function(key) {
-      if (objB[key]) intersect += 1;
-    });
-    var objBSize = Object.keys(setB).length
-    var objASize = aKeys.length;
-    var similarity = intersect/(objASize + objBSize - intersect);
+  var aKeys = Object.keys(objA);
+  var intersect = 0;
+  aKeys.forEach(function(key) {
+    if (objB[key]) intersect += 1;
+  });
+  var objBSize = Object.keys(setB).length;
+  var objASize = aKeys.length;
+  var similarity = intersect / (objASize + objBSize - intersect);
 
-    return similarity;
+  return similarity;
 }
 
 function similaritySet(setA, setB) {
-    var intersect = 0;
-    setA.forEach(function(key) {
-      if (setB.has(key)) intersect += 1;
-    });
-    var similarity = intersect/(setA.size + setB.size - intersect);
+  var intersect = 0;
+  setA.forEach(function(key) {
+    if (setB.has(key)) intersect += 1;
+  });
+  var similarity = intersect / (setA.size + setB.size - intersect);
 
-    return similarity;
+  return similarity;
 }
 ```
 
@@ -90,29 +91,65 @@ module is extremely good for this. Here are the results:
 
 ```
 > node index.js
-Compute jaccard similarity with Set x 1,232 ops/sec ±1.45% (87 runs sampled)
-Compute jaccard similarity with Map x 1,193 ops/sec ±1.33% (88 runs sampled)
-Compute jaccard similarity with objects (Object.keys()) x 616 ops/sec ±1.32% (85 runs sampled)
-Compute jaccard similarity with objects (for in) x 600 ops/sec ±1.46% (82 runs sampled)
+Compute jaccard similarity with Set x 3,445 ops/sec ±2.39% (84 runs sampled)
+Compute jaccard similarity with Map x 3,479 ops/sec ±0.40% (91 runs sampled)
+Compute jaccard similarity with objects (Object.keys()) x 1,787 ops/sec ±0.97% (86 runs sampled)
+Compute jaccard similarity with objects (for in) x 1,698 ops/sec ±0.75% (91 runs sampled)
+Fastest is Compute jaccard similarity with Map
+(Set) Jaccard top pair at: 2 (0.010101010101010102)
+(Map) Jaccard top pair at: 2 (0.010101010101010102)
+(Obj.keys) Jaccard top pair at: 2 (0.010101010101010102)
 ```
 
-Set objects are almost two times faster than our old plain Object. The tests
-were executed using v8 engine `4.6.85.31`.
+Set objects are two times faster than our old plain Object. The tests
+were executed using node version `14.4.0`
 
 ## Memory consideration
 
-I compared RAM consumption by building 10,000,000 string keys and stored them
-both as object keys and as set elements. There was no significant difference
-between two approaches: Set used ~913MB, while Object was ~942MB. You can
-find code in [testMemory.sh](https://github.com/anvaka/set-vs-object/blob/master/testMemory.sh)
+I compared RAM consumption by building 1,000,000 string keys and stored them
+both as object keys and as set elements. There was huge overhead of memory 
+usage with objects.
+
+Set used ~67MB, while Object used ~126MB:
+
+
+```
+Testing with Set
+Memory usage (bytes): {
+   "rss": 113,303,552,
+   "heapTotal": 89,473,024,
+   "heapUsed":67,126,776,
+   "external":775,983
+}
+
+Testing with Object
+Memory usage (bytes): {
+  "rss": 155,701,248,
+  "heapTotal": 131,948,544,
+  "heapUsed": 126,989,976,
+  "external": 775,983
+}
+```
+
+You can read description of each field here: [process.memoryUsage()](https://nodejs.org/api/process.html#process_process_memoryusage).
+
+Tes code is in [testMemory.sh](https://github.com/anvaka/set-vs-object/blob/master/testMemory.sh)
 
 # Conclusion
 
 Sets are awesome and we should use them more often. They are fast, and supported
-by Chrome, Firefox, Microsoft Edge, and node.js.
+by Chrome, Firefox, Microsoft Edge, and Node.js.
 
 You can explore [index.js](https://github.com/anvaka/set-vs-object/blob/master/index.js)
 file to see the actual benchmark code.
+
+## Other benchmarks
+
+* [Array vs Object](https://github.com/anvaka/array-vs-object) - what is faster:
+store array of vectors, or encode vectors into array?
+* [Iterator vs foreach](https://github.com/anvaka/iterator-vs-foreach) - what is faster:
+use `forEach`, `for`, `for .. of`, `[Symbol.Iterator]()`, or `yield *`?
+
 
 ## Bonus
 

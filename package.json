@@ -4,12 +4,12 @@
   "description": "Comparing performance of Set vs Object for counting objects",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node index.js"
   },
   "author": "Andrei Kashcha",
   "license": "MIT",
   "dependencies": {
-    "benchmark": "^1.0.0",
-    "ngraph.random": "0.0.1"
+    "benchmark": "^2.1.4",
+    "ngraph.random": "1.0.0"
   }
 }
